@@ -20,9 +20,6 @@ int	main(int argc, char **argv)
 	int		*res = malloc(len * sizeof(int));
 	int		i = 0;
 	int		count = 0;
-	int	y = i -1;
-	int	keep = 0;
-	int	k = 0;
 
 	while (l1 >= 0)
 	{
@@ -40,6 +37,10 @@ int	main(int argc, char **argv)
 		count++;
 		l1--;
 	}
+
+	int	y = i -1;
+	int	keep = 0;
+	int	k = 0;
 	while (y >= 0)
 	{
 		if (arr[y] > 9)
@@ -52,6 +53,7 @@ int	main(int argc, char **argv)
 			res[k] = arr[y] + keep;
 			keep = 0;
 		}
+		printf("res[%i]: %i, keep: %i\n", y, res[k], keep);
 		y--;
 		k++;
 	}
