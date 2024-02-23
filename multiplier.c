@@ -38,6 +38,7 @@ int	main(int argc, char **argv)
 		l1--;
 	}
 
+	printf("i: %i\n", i);
 	int	y = i -1;
 	int	keep = 0;
 	int	k = 0;
