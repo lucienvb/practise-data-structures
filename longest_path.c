@@ -2,109 +2,93 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct s_node {
-    int data;
-    struct s_node *next;
-} t_node;
+int findBiggest(char *input) {
+    int biggest = 0;
+    char *temp = malloc(20 * sizeof(char));
+    if (!temp)
+        return 1;
+    for (int i = 0; i < 20; i++)
+        temp[i] = '\0';
 
-typedef struct s_graph {
-    int numVertices;
-    t_node **adjLists;
-} t_graph;
-
-t_node *createNode(int data) {
-    t_node *node = malloc(sizeof(t_node));
-    if (!node)
-        return NULL;
-    node->data = data;
-    node->next = NULL;
-    return node;
-}
-
-t_graph *createGraph(int numVertices) {
-    t_graph *graph = malloc(sizeof(t_graph));
-    if (!graph)
-        return NULL;
-    graph->numVertices = numVertices;
-    graph->adjLists = malloc(numVertices * sizeof(t_node*));
-    if (!graph->adjLists) {
-        free(graph);
-        return NULL;
+    int j = 0;
+    for (int i = 0; input[i]; i++) {
+        if (input[i] != '-' && input[i] != ' ')
+            temp[j++] = input[i];
+        else {
+            int current = atoi(temp);
+            if (current > biggest)
+                biggest = current;
+            for (int i = 0; i < 20; i++)
+                temp[i] = '\0';
+            j = 0;
+        }         
     }
-    for (int i = 0; i < numVertices; i++)
-        graph->adjLists[i] = NULL;
-    return graph;
+    int current = atoi(temp);
+    if (current > biggest)
+        biggest = current;
+    free(temp);
+    return biggest;
 }
 
-void addEdge(t_graph *graph, int src, int dest) {
-    t_node *newNode = createNode(dest);
-    newNode->next = graph->adjLists[src];
-    graph->adjLists[src] = newNode;
+// getFirst(char *link) {
+// char first[];
+// char second[];
+// 
 
-    newNode = createNode(src);
-    newNode->next = graph->adjLists[dest];
-    graph->adjLists[dest] = newNode;
-}
-
-void freeGraph(t_graph *graph) {
-    for (int i = 0; i < graph->numVertices; i++) {
-        t_node *temp = graph->adjLists[i];
-        while (temp) {
-            t_node *toDelete = temp;
-            temp = temp->next;
-            free(toDelete);
-        }
-    }
-    free(graph->adjLists);
-    free(graph);
-}
-
-void printGraph(t_graph *graph) {
-    for (int v = 0; v < graph->numVertices; v++) {
-        t_node *temp = graph->adjLists[v];
-        printf("\n Vertex %d\n: ", v);
-        while (temp) {
-            printf("%d -> ", temp->data);
-            temp = temp->next;
-        }
-        printf("\n");
-    }
-}
-
-int findMaxNode(char* input) {
-    int maxNode = 0;
-    char* token = strtok(input, " ");
-    while (token != NULL) {
-        int src, dest;
-        sscanf(token, "%d-%d", &src, &dest);
-        if (src > maxNode) maxNode = src;
-        if (dest > maxNode) maxNode = dest;
-        token = strtok(NULL, " ");
-    }
-    return maxNode;
-}
+// }
 
 int main() {
-    char input[] = "1-2 2-3 5-6 6-2 7-8 8-3 6-4 10-11 11-2 11-6";
-    
-    char tempInput[256];
-    strncpy(tempInput, input, sizeof(tempInput));
-    int maxNode = findMaxNode(tempInput);
-    
-    int numVertices = maxNode + 1;  // Adjust for 0-based indexing
+    char input[] = "1-2 3-2 1-3 2-4";
+    char instance[10];
 
-    t_graph *graph = createGraph(numVertices);
+    int biggest = findBiggest(input);
+    printf("biggest: %i\n", biggest);
 
-    char* token = strtok(input, " ");
-    while (token != NULL) {
-        int src, dest;
-        sscanf(token, "%d-%d", &src, &dest);
-        addEdge(graph, src, dest);
-        token = strtok(NULL, " ");
+    int matrix[biggest+1][biggest+1];
+    for (int i = 0; i <= biggest; i++) {
+        for (int j = 0; j <= biggest; j++) {
+            matrix[i][j] = 0;
+        }
     }
 
-    printGraph(graph);
-    freeGraph(graph);
+    printf("input: %s\n", input);
 
+    int j = 0;
+    int first = 0;
+    int second = 0;
+
+    for (size_t i = 0; i <= strlen(input); i++) {
+        printf("input[%zu]: %i\n", i, input[i]);
+        if (input[i] == '-') {
+            instance[j] = '\0';
+            first = atoi(instance);
+            printf("first: %i\n", first);
+            printf("instance: %s\n", instance);
+            j = 0;
+            continue;
+        }
+        else if (input[i] == ' ' || input[i] == '\0') {
+            instance[j] = '\0';
+            second = atoi(instance);
+            printf("second: %i\n", second);
+            printf("instance: %s\n", instance);
+            j = 0;
+            matrix[first][second] = 1;
+            matrix[second][first] = 1;
+            continue;
+        }
+        instance[j] = input[i];
+        j++;
+    }
+
+    printf("B\n");
+
+    for (int i = 1; i <= biggest; i++) {
+        printf("\nmatrix[%i]: ", i);
+        for (int j = 0; j < biggest; j++) {
+            printf("%i", matrix[i][j]);
+        }
+    }
+    printf("\n");
     return 0;
 }

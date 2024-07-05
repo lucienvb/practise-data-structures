@@ -6,7 +6,7 @@ echo "test 1: 1 * 1 = 1"
 ./a.out 1 1
 
 echo "test 2: 99 * 99 = 9801"
-./a.out '99' '99'
+./a.out 99 99
 
 echo "test 3: -99 * 99 = -9801"
 ./a.out '-99' '99'
