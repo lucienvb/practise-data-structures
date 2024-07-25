@@ -83,26 +83,23 @@ int find_diameter(int map[MAX_NODES][MAX_NODES], int num_nodes) { // num_nodes i
 }
 
 void write_number(int num) {
-    char buffer[12];
-    int index = 0;
-
-    if (num == 0)
-        buffer[index++] = '0';
-    else {
-        while (num > 0) {
-            buffer[index++] = (num % 10) + '0';
-            num /= 10;
-        }
+    if (num == 0) {
+        write(1, "0", 1);
+        return ;
     }
-
-    // Reverse the string
-    for (int i = 0; i < index / 2; i++) {
-        char temp = buffer[i];
-        buffer[i] = buffer[index - i - 1];
-        buffer[index - i - 1] = temp;
+    char str[12];
+    for (int i = 0; i < 12; i++)
+        str[i] = '\0';
+    int j = 0;
+    while (num > 0) {
+        str[j] = (num % 10) + '0';
+        num /= 10;
+        j++;
     }
-
-    write(1, buffer, index);
+    while (j >= 0) {
+        write(1, &str[j], 1);
+        j--;
+    }
 }
 
 int main(int argc, char **argv) {
